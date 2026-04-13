@@ -1,0 +1,72 @@
+# Calculator test rules — defines behaviors that unit tests should cover.
+# Each rule has:
+#   given:  preconditions (what the test sets up)
+#   assert: expected assertions (what the test verifies)
+#
+# $-prefixed variables are bind variables resolved by constraint satisfaction.
+# "any" matches anything.
+
+rules:
+  - id: add_two_numbers
+    description: "Calculator.add returns the sum of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: subtract_two_numbers
+    description: "Calculator.subtract returns the difference of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.subtract($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: divide_by_zero_throws
+    description: "Calculator.divide throws ArithmeticException when dividing by zero"
+    given:
+      - create $calc: Calculator()
+    assert:
+      - Throws: ArithmeticException
+
+  - id: multiply_two_numbers
+    description: "Calculator.multiply returns the product of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.multiply($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: add_with_mock_logger
+    description: "Calculator.add logs the operation via a mock logger"
+    given:
+      - mock: log returns any
+      - create $calc: Calculator
+    assert:
+      - AreEqual: [any, any]
+
+  - id: result_is_not_null
+    description: "Calculator.add result is not null"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - IsNotNull: $result
+
+  - id: divide_returns_result
+    description: "Calculator.divide returns correct result"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.divide($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: add_without_mock
+    description: "Calculator.add works without mock logger"
+    given:
+      - create $calc: Calculator()
+      - not mock: log returns any
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - AreEqual: [$result, any]

@@ -1,0 +1,72 @@
+# Example rules for a Calculator class
+# Each rule has:
+#   given:  preconditions (what the test sets up)
+#   assert: expected assertions (what the test verifies)
+#
+# $-prefixed variables are bind variables resolved by constraint satisfaction.
+# "any" matches anything.
+
+rules:
+  - id: add_two_numbers
+    description: "Calculator.add returns the sum of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: subtract_two_numbers
+    description: "Calculator.subtract returns the difference of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.subtract($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: divide_by_zero_raises
+    description: "Calculator.divide raises ValueError when dividing by zero"
+    given:
+      - create $calc: Calculator()
+    assert:
+      - Raises: ValueError
+
+  - id: multiply_two_numbers
+    description: "Calculator.multiply returns the product of two numbers"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.multiply($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: add_with_mock_logger
+    description: "Calculator.add logs the operation via a mock logger"
+    given:
+      - mock: log returns None
+      - create $calc: Calculator
+    assert:
+      - AreEqual: [any, any]
+
+  - id: result_is_not_none
+    description: "Calculator.add result is not None"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - IsNotNone: $result
+
+  - id: divide_returns_float
+    description: "Calculator.divide returns correct float result"
+    given:
+      - create $calc: Calculator()
+      - $result = call: $calc.divide($a, $b)
+    assert:
+      - AreEqual: [$result, any]
+
+  - id: add_without_mock
+    description: "Calculator.add works without mock logger"
+    given:
+      - create $calc: Calculator()
+      - not mock: log returns any
+      - $result = call: $calc.add($a, $b)
+    assert:
+      - AreEqual: [$result, any]

@@ -1,0 +1,172 @@
+# Accessor<T> test rules — defines behaviors that unit tests should cover.
+# Each rule has:
+#   given:  preconditions (what the test sets up)
+#   assert: expected assertions (what the test verifies)
+#
+# $-prefixed variables are bind variables resolved by constraint satisfaction.
+# "any" matches anything.  Type patterns: "Accessor" matches "Accessor<string>", etc.
+
+rules:
+  - id: no_value_is_null
+    description: "Accessor created without value - Value should be null"
+    given:
+      - create $acc: Accessor()
+    assert:
+      - IsNull: $acc.Value
+
+  - id: with_value_stores
+    description: "Accessor created with value - Value should equal constructor arg"
+    given:
+      - create $acc: Accessor($val)
+    assert:
+      - AreEqual: [$acc.Value, $val]
+
+  - id: with_value_stores_null
+    parent: with_value_stores
+    description: "Accessor created with value - Value should equal constructor arg"
+    given:
+      - create $acc: Accessor(null)
+    assert:
+      - AreEqual: [$acc.Value, null]
+
+  - id: with_value_stores_empty
+    parent: with_value_stores
+    description: "Accessor created with value - Value should equal constructor arg"
+    given:
+      - create $acc: Accessor("")
+    assert:
+      - AreEqual: [$acc.Value, ""]
+
+  - id: setvalue_updates
+    description: "After SetValue via IAccessorSetter, Value should reflect the new value"
+    given:
+      - create $acc: Accessor
+      - call: SetValue on IAccessorSetter<any>
+    assert:
+      - AreEqual: [$acc.Value, any]
+
+  - id: setvalue_null_clears
+    parent: setvalue_updates
+    description: "SetValue(null) via IAccessorSetter clears value to null"
+    given:
+      - create $acc: Accessor($val)
+      - call: SetValue on IAccessorSetter<any>
+    assert:
+      - IsNull: [$acc.Value]
+
+  - id: onfirstset_immediate_1
+    or_group: onfirstset_immediate
+    description: "OnFirstSet when value already exists - callback fires immediately with value"
+    given:
+      - create $acc: Accessor($val)
+      - call: OnFirstSet
+    assert:
+      - AreEqual: [any, $val]
+
+  - id: onfirstset_immediate_2
+    or_group: onfirstset_immediate
+    description: "OnFirstSet when value already exists - callback fires immediately with value"
+    given:
+      - create $acc: Accessor
+      - call: SetValue($val) on IAccessorSetter<any>
+      - call: OnFirstSet
+    assert:
+      - AreEqual: [any, $val]
+
+  - id: no_value_no_set_remains_null
+    description: "Accessor created without value and SetValue NOT called - Value stays null"
+    given:
+      - create $acc: Accessor()
+      - not call: SetValue on IAccessorSetter<any>
+    assert:
+      - IsNull: $acc.Value
+
+  - id: onfirstset_delayed
+    description: "OnFirstSet before SetValue - callback fires after value is set"
+    given:
+      - create $acc: Accessor()
+      - call: OnFirstSet
+      - call: SetValue($val) on IAccessorSetter<any>
+    assert:
+      - AreEqual: [any, $val]
+
+  - id: onfirstset_multiple_calls
+    description: "Multiple OnFirstSet calls before SetValue - all callbacks fire after value is set"
+    given:
+      - create $acc: Accessor
+      - call: OnFirstSet
+      - call: OnFirstSet
+
+  - id: onfirstset_setvalue_order
+    description: "Order of OnFirstSet and SetValue calls - callback should fire on first SetValue regardless of order"
+    given:
+      - create $acc: Accessor
+      - call: SetValue($val) on IAccessorSetter<any>
+      - call: OnFirstSet
+
+  - id: onfirstset_only_first_1
+    description: "OnFirstSet should only fire on first SetValue, not subsequent ones"
+    or_group: onfirstset_only_first
+    given:
+      - create $acc: Accessor()
+      - call: OnFirstSet
+      - call: SetValue on IAccessorSetter<any>
+      - call: SetValue on IAccessorSetter<any>
+
+  - id: onfirstset_only_first_2
+    description: "OnFirstSet should only fire on first SetValue, not subsequent ones"
+    or_group: onfirstset_only_first
+    given:
+      - create $acc: Accessor()
+      - call: SetValue on IAccessorSetter<any>
+      - call: SetValue on IAccessorSetter<any>
+      - call: OnFirstSet
+
+  - id: onfirstset_only_first_3
+    description: "OnFirstSet should only fire on first SetValue, not subsequent ones"
+    or_group: onfirstset_only_first
+    given:
+      - create $acc: Accessor()
+      - call: SetValue on IAccessorSetter<any>
+      - call: OnFirstSet
+      - call: SetValue on IAccessorSetter<any>
+
+  - id: onfirstset_only_first_4
+    description: "OnFirstSet should only fire on first SetValue, not subsequent ones"
+    or_group: onfirstset_only_first
+    given:
+      - create $acc: Accessor($val)
+      - call: SetValue on IAccessorSetter<any>
+      - call: OnFirstSet
+
+  - id: onfirstset_only_first_5
+    description: "OnFirstSet should only fire on first SetValue, not subsequent ones"
+    or_group: onfirstset_only_first
+    given:
+      - create $acc: Accessor($val)
+      - call: OnFirstSet
+      - call: SetValue on IAccessorSetter<any>
+
+  - id: getvalueorthrow_returns
+    description: "GetValueOrThrow returns the stored value when value is set"
+    given:
+      - create $acc: Accessor($val)
+      - call: $acc.GetValueOrThrow
+    assert:
+      - AreEqual: [any, $val]
+
+  - id: getvalueorthrow_throws_when_null
+    description: "GetValueOrThrow throws InvalidOperationException when no value is set"
+    given:
+      - create $acc: Accessor()
+    assert:
+      - Throws: [InvalidOperationException, $acc.GetValueOrThrow]
+
+  - id: callback_exception_propagates
+    description: "Exception thrown inside OnFirstSet callback propagates through SetValue"
+    given:
+      - create $acc: Accessor()
+      - assign $setter = $acc: IAccessorSetter<any>
+      - call: OnFirstSet throws $excType
+    assert:
+      - Throws: [$excType]
