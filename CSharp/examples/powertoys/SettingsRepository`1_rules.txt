@@ -1,0 +1,29 @@
+GetInstance
+- GetInstance_FirstCall_ShouldCreateNewInstance
+- GetInstance_WithNullSettingsUtils_ShouldThrowArgumentNullException
+- GetInstance_MultipleCalls_ShouldReturnSameInstance
+- GetInstance_IsThreadSafe
+- GetInstance_NothingThrows_WatcherIsInitialized
+
+SettingsConfig (get)
+- SettingsConfig_Get_WhenConfigIsNull_ShouldLoadFromSettingsUtils
+- SettingsConfig_Get_WhenConfigAlreadyLoaded_ShouldReturnCachedValue
+
+SettingsConfig (set)
+- SettingsConfig_Set_WithNonNullValue_ShouldUpdateConfig
+- SettingsConfig_Set_WithNullValue_ShouldNotChangeExistingConfig
+
+ReloadSettings
+- ReloadSettings_WhenSuccessful_ShouldReturnTrue
+- ReloadSettings_WhenSuccessful_ShouldUpdateSettingsConfig
+- ReloadSettings_WhenExceptionThrown_ShouldReturnFalse
+- ReloadSettings_WhenSuccessful_ShouldRaiseSettingsChangedEvent
+
+StopWatching
+- StopWatching_WhenWatcherExists_ShouldDisableRaisingEvents
+
+StartWatching
+- StartWatching_WhenWatcherExists_ShouldEnableRaisingEvents
+
+Dispose
+- Dispose_ShouldDisposeFileSystemWatcher

@@ -1,0 +1,49 @@
+Constructor
+- Constructor_called_CountShouldBeZero
+- Constructor_called_RwLockShouldBeInitialized
+
+Count
+- Count_onEmptySet_ShouldReturnZero
+- Count_afterAddingOneItem_ShouldReturnOne
+- Count_afterAddingMultipleDistinctItems_ShouldReturnCorrectCount
+- Count_afterAddingDuplicateItem_ShouldNotIncrease
+
+TryAdd(T item)
+- TryAdd_newItem_ShouldReturnTrue
+- TryAdd_newItem_CountShouldIncreaseByOne
+- TryAdd_duplicateItem_ShouldReturnFalse
+- TryAdd_duplicateItem_CountShouldRemainUnchanged
+- TryAdd_afterRemovingItem_ShouldReturnTrue
+
+TryAdd(T item, out int count)
+- TryAdd_newItemWithOutCount_ShouldReturnTrue
+- TryAdd_newItemWithOutCount_OutCountShouldReflectNewTotal
+- TryAdd_duplicateItemWithOutCount_ShouldReturnFalse
+- TryAdd_duplicateItemWithOutCount_OutCountShouldRemainUnchanged
+
+TryAddAndGet(T item, out T addedItem)
+- TryAddAndGet_newItem_ShouldReturnTrue
+- TryAddAndGet_newItem_AddedItemShouldBeTheProvidedItem
+- TryAddAndGet_existingItem_ShouldReturnFalse
+- TryAddAndGet_existingItem_AddedItemShouldBeTheOriginalStoredReference
+
+TryRemove
+- TryRemove_existingItem_ShouldReturnTrue
+- TryRemove_existingItem_CountShouldDecreaseByOne
+- TryRemove_nonExistingItem_ShouldReturnFalse
+- TryRemove_nonExistingItem_CountShouldRemainUnchanged
+- TryRemove_fromEmptySet_ShouldReturnFalse
+- TryRemove_sameItemTwice_SecondCallShouldReturnFalse
+
+Iterate
+- Iterate_indexZeroOnNonEmptySet_ShouldReturnTrueAndOutputFirstItem
+- Iterate_indexZeroOnNonEmptySet_ShouldIncrementIndexToOne
+- Iterate_indexAnyOnNonEmptySet_ShouldReturnTrueAndOutputCorrectItem
+- Iterate_indexAnyOnNonEmptySet_ShouldIncreaseIndexByOne
+- Iterate_indexAtOrBeyondCount_ShouldReturnFalse
+- Iterate_indexAtOrBeyondCount_OutItemShouldBeDefault
+- Iterate_onEmptySet_ShouldReturnFalseImmediately
+
+Clear
+- Clear_onNonEmptySet_CountShouldBecomeZero
+- Clear_onEmptySet_ShouldNotThrow

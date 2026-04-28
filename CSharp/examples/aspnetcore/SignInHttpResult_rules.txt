@@ -1,0 +1,23 @@
+Constructor
+- Constructor_WithPrincipalOnly_ShouldSetPrincipalAndNullSchemeAndNullProperties
+- Constructor_WithPrincipalSchemeAndProperties_ShouldSetAllPropertiesCorrectly
+
+AuthenticationScheme (property)
+- AuthenticationScheme_ShouldReturnValueSetInConstructor
+
+Principal (property)
+- Principal_ShouldReturnValueSetInConstructor
+
+Properties (property)
+- Properties_ShouldReturnValueSetInConstructor
+
+ExecuteAsync
+- ExecuteAsync_WithNullHttpContext_ShouldThrowArgumentNullException
+- ExecuteAsync_ShouldCallSignInAsyncOnHttpContext
+- ExecuteAsync_ShouldPassAuthenticationSchemeToSignIn
+- ExecuteAsync_ShouldPassPrincipalToSignIn
+- ExecuteAsync_ShouldPassPropertiesToSignIn
+- ExecuteAsync_ShouldLogSignInResultExecuting
+- ExecuteAsync_SignInAsyncOnHttpContextSuccess_ShouldReturn
+- ExecuteAsync_SignInAsyncOnHttpContextNotSuccess_ShouldReturn
+- ExecuteAsync_SignInAsyncOnHttpContextThrows_ShouldThrow

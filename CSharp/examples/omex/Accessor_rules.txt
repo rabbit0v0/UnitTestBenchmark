@@ -1,0 +1,24 @@
+Constructor
+- Constructor_WithNullValue_ShouldCreateAccessorWithNullValue
+- Constructor_WithNonNullValue_ShouldStoreProvidedValue
+- Constructor_Default_ShouldCreateAccessorWithNullValue
+
+SetValue (IAccessorSetter)
+- SetValue_ShouldUpdateInternalValue
+- SetValue_WhenQueuedCallbacksExist_ShouldInvokeAllCallbacks
+- SetValue_WhenQueuedCallbackIsGarbageCollected_ShouldNotThrow
+- SetValue_AfterInvokingCallbacks_ShouldClearCallbackList
+
+OnFirstSet (IAccessor)
+- OnFirstSet_WhenValueAlreadySet_ShouldInvokeActionImmediately
+- OnFirstSet_WhenValueIsNotSet_ShouldQueueAction
+- OnFirstSet_WhenValueIsNotSet_AndSetValueCalledLater_ShouldInvokeQueuedAction
+- OnFirstSet_WhenMultipleActionsQueued_ShouldInvokeAllOnSetValue
+
+Value (IAccessor)
+- Value_WhenNotSet_ShouldReturnNull
+- Value_AfterSetValue_ShouldReturnNewValue
+
+GetValueOrThrow (IAccessor)
+- GetValueOrThrow_WhenValueIsNull_ShouldThrowInvalidOperationException
+- GetValueOrThrow_WhenValueIsSet_ShouldReturnValue
